@@ -15,6 +15,7 @@ tipos = {
 
 }
 def organizar():
+    log = []
     for item in os.listdir(pasta_alvo):
         caminho_completo = os.path.join(pasta_alvo, item)
         if os.path.isfile(caminho_completo):
@@ -24,3 +25,9 @@ def organizar():
                     destino = os.path.join(pasta_alvo, pasta)
                     os.makedirs(destino, exist_ok=True)
                     shutil.move(caminho_completo, destino)
+                    log.append(f"{datetime.now()} | {item} → {pasta}")
+    with open(os.path.join(pasta_alvo, "log.txt"), "w", encoding="utf-8") as f:
+        f.write("\n".join(log))
+    print(f"Concluído! {len(log)} arquivos organizados com sucesso!")
+
+organizar()

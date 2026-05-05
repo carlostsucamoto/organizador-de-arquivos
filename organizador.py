@@ -11,8 +11,9 @@ tipos = {
     "Imagens": [".jpg", ".jpeg", ".png"],
     "Planilhas" : [".xlsx", ".csv"],
     "Documentos" : [".doc", ".docx"],
-    "Apresentacoes" : [".ppt", ".pptx"]
-
+    "Apresentacoes" : [".ppt", ".pptx"],
+    "Videos": [".mp4", ".mov", ".avi", ".mkv", ".wmv", ".webm"]
+    
 }
 def organizar():
     log = []
@@ -20,12 +21,19 @@ def organizar():
         caminho_completo = os.path.join(pasta_alvo, item)
         if os.path.isfile(caminho_completo):
             nome, extensao = os.path.splitext(item)
+            movido = False
             for pasta, extensoes in tipos.items():
                 if extensao.lower() in extensoes:
                     destino = os.path.join(pasta_alvo, pasta)
                     os.makedirs(destino, exist_ok=True)
                     shutil.move(caminho_completo, destino)
                     log.append(f"{datetime.now()} | {item} → {pasta}")
+                    movido = True
+            if not movido:
+                destino = os.path.join(pasta_alvo, "Outros")
+                os.makedirs(destino, exist_ok=True)
+                shutil.move(caminho_completo, destino)
+                log.append(f"{datetime.now()} | {item} → Outros")         
     with open(os.path.join(pasta_alvo, "log.txt"), "w", encoding="utf-8") as f:
         f.write("\n".join(log))
     print(f"Concluído! {len(log)} arquivos organizados com sucesso!")
